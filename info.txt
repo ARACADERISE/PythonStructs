@@ -1,0 +1,12 @@
+Casted Struct Item Name: NewStructItemSUP
+Casted Struct Item NewStructItemSUP Value/Info: 
+	SUP for Structs!
+
+Casted Struct Item Name: NewStructItemInformation
+Casted Struct Item NewStructItemInformation Value/Info: 
+	Adding struct item value/information
+
+Casted Struct Item Name: NewStructItem
+Casted Struct Item NewStructItem Value/Info: 
+	Adding new Struct item
+
