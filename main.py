@@ -55,6 +55,9 @@ class CreateStruct:
         self.current_name_index = 0
         self.current_info_index = 0
 
+        for i in struct_items:
+            self.information.update({i:{}})
+
     @CastNewItem(['NewStructItem','Adding new Struct item'])
     def add_items(self, struct_item_name, add_many = 0):
 
@@ -72,11 +75,88 @@ class CreateStruct:
             self.current_name_index += 1
 
     @CastNewItem(['NewStructItemInformation', 'Adding struct item value/information'])
-    def __init_struct_item_info_(self, struct_item_info):
-        self.struct_name_values.append(struct_item_info)
-        self.information[self.struct_names[self.current_info_index]] = self.struct_name_values[self.current_info_index]
+    def AddInfo(self, Item_Name,Item_Info):
 
-        self.current_info_index += 1
+        if isinstance(Item_Name,list):
+            if isinstance(Item_Info, list):
+                if len(Item_Info) > len(Item_Name):
+                    raise Exception('\nCannot assign more values than there are items\n')
+                if len(Item_Name) > len(Item_Info):
+                    
+                    for i in range(len(Item_Name)):
+                        if i == len(Item_Info): break
+
+                        if Item_Name[i] in self.information:
+                            self.information[Item_Name[i]] = Item_Info[i]
+                    
+                    if Item_Name[len(Item_Name)-1] in self.information:
+                        self.information[Item_Name[len(Item_Name)-1]] = "NULL"
+                else:
+                    for i in Item_Name:
+                        if not i in self.information:
+                            raise Exception(f'\nItem {i} not found\n')
+                    
+                    for i in range(len(Item_Info)):
+                        self.information[Item_Name[i]] = Item_Info[i]
+            else:
+                for i in Item_Name:
+                    if i in self.information:
+                        self.information[i] = Item_Info
+        
+        else:
+            self.struct_name_values.append(Item_Info)
+            if Item_Name in self.information:
+                self.information[Item_Name] = self.struct_name_values[self.current_info_index]
+            else:
+                raise Exception('\nCannot give value to something that does not exist in the struct\n')
+
+            self.current_info_index += 1
+    
+    @CastNewItem(['PrintingStructItem','Printing the struct item'])
+    def print_struct_item(self, item_name):
+
+        if isinstance(item_name,list):
+            for i in item_name:
+                if i in self.information:
+                    if self.information[i] == {}:
+                        self.information[i] = "NULL"
+                    print(i+':\t',self.information[i])
+        else:
+            if item_name in self.information:
+                print(item_name+':\t',self.information[item_name])
+    
+    @CastNewItem(['PrintAllItems','Printing all Struct items'])
+    def print_all(self):
+
+        tabs = 0
+        tabs_ = ''
+        curr = 0
+        all = []
+        item_to_tab = ''
+
+        for i in self.information:
+            all.append(i)
+            if self.information[i] == {}:
+                self.information[i] = "NULL"
+    
+        for i in range(len(all)):
+            if i > 1:
+
+                if len(all[i-1]) > len(all[i]):
+                    item_to_tab = all[i]
+                    tabs = len(all[i-1])-len(all[i])+1
+                    tabs_ = ' '*tabs
+
+        for i in all:
+            if i == item_to_tab:
+                print(i+f':\t{tabs_}',self.information[i])
+            else: print(i+':\t',self.information[i])
+
+            curr += 1
 
 STRUCT = CreateStruct(['ItemOne','ItemTwo','ItemThree'])
-STRUCT.add_items('hey')
+STRUCT.add_items('No')
+STRUCT.AddInfo(['ItemOne','ItemTwo', 'ItemThree'],['info','info_2','info_3'])
+STRUCT.AddInfo('No','Boom. Structs in Python!')
+
+STRUCT.print_all()

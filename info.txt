@@ -1,3 +1,15 @@
+Casted Struct Item Name: PrintAllItems
+Casted Struct Item PrintAllItems Value/Info: 
+	Printing all Struct items
+
+Casted Struct Item Name: PrintingStructItem
+Casted Struct Item PrintingStructItem Value/Info: 
+	Printing the struct item
+
+Casted Struct Item Name: NewStruct
+Casted Struct Item NewStruct Value/Info: 
+	Creating New Struct
+
 Casted Struct Item Name: NewStructItemSUP
 Casted Struct Item NewStructItemSUP Value/Info: 
 	SUP for Structs!
