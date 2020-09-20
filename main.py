@@ -181,12 +181,12 @@ class CreateStruct:
         if add_many > 0:
             for i in add_many:
                 self.struct_names.append(struct_item_name[i])
-                self.information.update({self.struct_names[self.current_name_index]:{}})
+                self.information.update({struct_item_name[i]:{}})
 
                 self.current_name_index += 1
         else:
             self.struct_names.append(struct_item_name)
-            self.information.update({self.struct_names[self.current_name_index]:{}})
+            self.information.update({struct_item_name:{}})
 
             self.current_name_index += 1
 
