@@ -47,8 +47,17 @@ class CreateStruct:
 
     def __init__(self, struct_items):
 
-        self.StructItems = struct_items
-        self.struct_names = []
+        if isinstance(struct_items,list):
+            self.StructItems = struct_items
+            self.struct_names = self.StructItems
+        else:
+            if isinstance(struct_items,dict):
+                raise Exception('Cannot parse through dictionary')
+            if isinstance(struct_items,object):
+                raise Exception('Cannot parse through obejct')
+            self.StructItems = [struct_items]
+            self.struct_names = self.StructItems
+        print(self.struct_names)
         self.struct_name_values = []
         self.updated_names = {}
         self.update_values = {}
@@ -59,8 +68,8 @@ class CreateStruct:
         for i in struct_items:
             self.information.update({i:{}})
         
-        for i in struct_items:
-            self.struct_names.append(i)
+        #for i in struct_items:
+            #self.struct_names.append(i)
     
     def _init_items_(self, **kwargs) -> list:
 
