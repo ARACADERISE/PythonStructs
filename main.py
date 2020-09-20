@@ -57,7 +57,6 @@ class CreateStruct:
                 raise Exception('Cannot parse through obejct')
             self.StructItems = [struct_items]
             self.struct_names = self.StructItems
-        print(self.struct_names)
         self.struct_name_values = []
         self.updated_names = {}
         self.update_values = {}
