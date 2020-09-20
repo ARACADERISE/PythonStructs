@@ -195,11 +195,15 @@ class CreateStruct:
 
         # if struct_item_name is a list
         if add_many > 0:
-            for i in add_many:
+            for i in range(add_many):
                 self.struct_names.append(struct_item_name[i])
                 self.information.update({struct_item_name[i]:{}})
 
                 self.current_name_index += 1
+        elif isinstance(struct_item_name,list):
+            for i in struct_item_name:
+                self.struct_names.append(i)
+                self.information.update({i:{}})
         else:
             self.struct_names.append(struct_item_name)
             self.information.update({struct_item_name:{}})
@@ -299,7 +303,3 @@ class CreateStruct:
             else: print(item+':\t',item_info)
 
             curr += 1
-
-struct = CreateStruct({'Names':['Bob','Aidan']})
-struct.update_name('Names','All Names')
-struct.print_all()
