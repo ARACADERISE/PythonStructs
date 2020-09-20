@@ -1,11 +1,19 @@
 # structs, in Python!
 import os
 
+"""
+    That one powerful Python tool to work with data..that only used/imported one library for only one use: checking if a single file existed
+"""
+
 casted_information = {}
 
 def _write_(information_1,information_2 = None):
 
     # "flushing" the file to be empty
+    if os.path.exist('info.txt'):
+        flush = open('info.txt','w')
+        flush.write('')
+        flush.close()
 
     with open('info.txt','w') as file:
 
@@ -291,3 +299,7 @@ class CreateStruct:
             else: print(item+':\t',item_info)
 
             curr += 1
+
+struct = CreateStruct({'Names':['Bob','Aidan']})
+struct.update_name('Names','All Names')
+struct.print_all()
