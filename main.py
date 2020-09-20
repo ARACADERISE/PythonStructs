@@ -46,26 +46,34 @@ class CastNewItem(object):
 class CreateStruct:
 
     def __init__(self, struct_items):
-
+        
+        # declared before if statements
+        self.struct_name_values = []
+        self.StructItems = []
+        self.information = {}
         if isinstance(struct_items,list):
             self.StructItems = struct_items
             self.struct_names = self.StructItems
         else:
             if isinstance(struct_items,dict):
-                raise Exception('Cannot parse through dictionary')
-            if isinstance(struct_items,object):
-                raise Exception('Cannot parse through obejct')
-            self.StructItems = [struct_items]
-            self.struct_names = self.StructItems
-        self.struct_name_values = []
+                for i in struct_items:
+                    self.StructItems.append(i)
+                    self.struct_names = self.StructItems
+                    self.struct_name_values.append(struct_items[i])
+                    self.information.update({i:struct_items[i]})
+            else:
+                if isinstance(struct_items,list):
+                    self.StructItems = struct_items
+                else: self.StructItems = [struct_items]
+                self.struct_names = self.StructItems
         self.updated_names = {}
         self.update_values = {}
-        self.information = {} # this will hold the struct names and information
         self.current_name_index = 0
         self.current_info_index = 0
 
-        for i in struct_items:
-            self.information.update({i:{}})
+        if self.information == {}:
+            for i in struct_items:
+                self.information.update({i:{}})
         
         #for i in struct_items:
             #self.struct_names.append(i)
