@@ -57,6 +57,7 @@ class CreateStruct:
                 raise Exception('Cannot parse through obejct')
             self.StructItems = [struct_items]
             self.struct_names = self.StructItems
+        print(self.struct_names)
         self.struct_name_values = []
         self.updated_names = {}
         self.update_values = {}
@@ -79,6 +80,10 @@ class CreateStruct:
                 if isinstance(item,bool):
                     if item == True:
                         LIST_OF_ITEMS.append(len(self.struct_names))
+            if val == 'values':
+                if isinstance(item,bool):
+                    if item == True:
+                        LIST_OF_ITEMS.append(self.struct_name_values)
             if val == "dict_":
                 if isinstance(item,bool):
                     if item == True:
