@@ -10,7 +10,7 @@ casted_information = {}
 def _write_(information_1,information_2 = None):
 
     # "flushing" the file to be empty
-    if os.path.exist('info.txt'):
+    if os.path.exists('info.txt'):
         flush = open('info.txt','w')
         flush.write('')
         flush.close()
@@ -209,6 +209,21 @@ class CreateStruct:
             self.information.update({struct_item_name:{}})
 
             self.current_name_index += 1
+    
+    @CastNewItem(['StructAppend','Appending one struct to another'])
+    def _save_(self, extra_info = None) -> (list or dict):
+        to_write = self.information
+        if extra_info:
+            if extra_info[0]:
+                to_write.update({'extra_saved_items':extra_info[0]})
+            else: to_write.update({'extra_saved_info':extra_info})
+        
+        to_write = str(to_write).replace("'",'"')
+        with open('information.json','w') as file:
+            file.write(to_write)
+            file.close()
+        
+        return self.information
 
     @CastNewItem(['NewStructItemInformation', 'Adding struct item value/information'])
     def AddInfo(self, Item_Name,Item_Info):
