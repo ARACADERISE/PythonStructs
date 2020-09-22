@@ -166,7 +166,7 @@ class CreateStruct:
             return self.updated_names
     
     @CastNewItem(['StructUpdateStructItemInfo','Updating struct item information/value'])
-    def update_value(self, item_name, new_value) -> (dict, None):
+    def update_value(self, item_name, new_value, index_to_chage = None) -> (dict, None):
 
         index = 0
         found = False
@@ -177,15 +177,23 @@ class CreateStruct:
                 break
         
         if found == True:
-            if self.struct_name_values[index]:
-                self.struct_name_values[index] = new_value
-                self.update_values.update({item_name:new_value})
-                
-                return self.update_values
-            else: 
-                self.struct_name_values.append(new_value)
-                self.current_info_index += 1
-            self.information[item_name] = new_value
+            if not index_to_chage == None:
+                if isinstance(self.struct_name_values[index],list):
+                    try:
+                        if self.struct_name_values[index][index_to_chage]:
+                            self.struct_name_values[index][index_to_chage] = new_value
+                            self.information[item_name] = self.struct_name_values[index]
+                    except IndexError: raise IndexError('Index out of range')
+            else:
+                if self.struct_name_values[index]:
+                    self.struct_name_values[index] = new_value
+                    self.update_values.update({item_name:new_value})
+                    
+                    return self.update_values
+                else: 
+                    self.struct_name_values.append(new_value)
+                    self.current_info_index += 1
+                self.information[item_name] = new_value
 
 
             return None
@@ -257,7 +265,14 @@ class CreateStruct:
         else:
             self.struct_name_values.append(Item_Info)
             if Item_Name in self.information:
-                self.information[Item_Name] = self.struct_name_values[self.current_info_index]
+                if isinstance(self.information[Item_Name],list):
+                    self.information[Item_Name].append(Item_Info)
+                else:
+                    if self.information[Item_Name] != {} or self.information[Item_Name] != "NULL":
+                        info = [self.information[Item_Name],Item_Info]
+                        self.information[Item_Name] = info
+                    else:
+                        self.information[Item_Name] = self.struct_name_values[self.current_info_index]
             else:
                 raise Exception('\nCannot give value to something that does not exist in the struct\n')
 
