@@ -186,6 +186,14 @@ class CreateStruct:
                             self.struct_name_values[index][index_to_chage] = new_value
                             self.information[item_name] = self.struct_name_values[index]
                     except IndexError: raise IndexError('Index out of range')
+                else:
+                    self.struct_name_values[index] = new_value
+                    if isinstance(self.information[item_name],list):
+                        self.information[item_name][index_to_chage] = new_value
+                    else:
+                        info = [self.information[item_name],new_value]
+                        self.information[item_name] = info
+
             else:
                 if self.struct_name_values[index]:
                     self.struct_name_values[index] = new_value
