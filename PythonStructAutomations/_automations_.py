@@ -19,12 +19,14 @@ class StructConnect:
             raise Exception('No file to connect to')
     
     def __init_item__(self): return self.StructConnection
+    def _file_name_(self): return self.file_to_connect_to
 
 class EntitleDb(object):
 
-    def __init__(self, object):
+    def __init__(self, object, file_name):
 
         self.db = object
+        self.conn_name = file_name
         self.db_information = {'Inserts':[None],'Commits':[None]} # storing all information
         self.current_updated_name = ''
         self.current_update_value = ''
@@ -59,6 +61,13 @@ class EntitleDb(object):
                 )
             )
             file.close()
+        
+        with open(self.conn_name,'w') as file:
+            file.write(json.dumps(
+                self.db._init_items_(dict_=True)[0],
+                sort_keys=False
+            ))
+            file.close()
     
     def _select_(self, item = None, as_='values'):
 
@@ -88,4 +97,3 @@ class EntitleDb(object):
             else:
                 if as_ == 'names':
                     return self.db._init_items_(names=True)[0]
-        
