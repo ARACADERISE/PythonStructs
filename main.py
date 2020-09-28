@@ -1,9 +1,9 @@
 # structs, in Python!
-import os
-#import StructAutomations._automations_
+import os, json
+import StructAutomations._automations_
 
 """
-    That one powerful Python tool to work with data..that only used/imported one library for only one use: checking if a single file existed
+    That one powerful Python tool to work with data..that only used/imported two ies for only one use: checking if a single file existed/loading stringified dictionaries
 
     Users Note:
         The application is only capable of parsing 2d arrays/dictionary arrays.
@@ -61,6 +61,7 @@ class CreateStruct:
     def __init__(self, struct_items):
         
         # declared before if statements
+        self.file_storage_name = None
         self.struct_name_values = []
         self.struct_names = []
         self.StructItems = []
@@ -100,6 +101,18 @@ class CreateStruct:
             if val == 'values':
                 if isinstance(item,bool):
                     if item == True:
+                        # Quickly filtering the self.struct_name_values list for repetition
+                        # START {
+                        al_ = []
+                        for i in self.struct_name_values:
+                            if isinstance(i,list):
+                                for x in i:
+                                    if not x in al_:
+                                        al_.append(x)
+                            else:
+                                al_.append(i)
+                        self.struct_name_values = al_
+                        # } END
                         LIST_OF_ITEMS.append(self.struct_name_values)
             if val == "dict_":
                 if isinstance(item,bool):
@@ -116,6 +129,30 @@ class CreateStruct:
                         LIST_OF_ITEMS.append(self.information)
         
         return LIST_OF_ITEMS
+    
+    def reload_info(self):
+
+        if self.file_storage_name:
+            
+            self.information = json.loads(open(self.file_storage_name,'r').read())
+            
+            self.current_info_index = 0
+            self.current_name_index = 0
+            self.struct_name_values = []
+            self.struct_names = []
+            self.StructItems = []
+
+            for i in self.information:
+
+                self.StructItems.append(i)
+                self.struct_names = self.StructItems
+
+                if isinstance(self.information[i],list):
+                    for x in self.information[i]:
+                        self.struct_name_values.append(x)
+
+                self.current_name_index += 1
+                self.current_info_index += 1
     
     def _grab_item_(self,item_type, from_):
 
@@ -240,19 +277,24 @@ class CreateStruct:
                 self.current_name_index += 1
     
     @CastNewItem(['StructAppend','Appending one struct to another'])
-    def _save_(self, extra_info = None) -> (list or dict):
+    def _save_(self, file = 'information.json',extra_info = None) -> (list or dict):
         to_write = self.information
-        if extra_info:
+        if not extra_info == None:
             if extra_info[0]:
                 to_write.update({'extra_saved_items':extra_info[0]})
             else: to_write.update({'extra_saved_info':extra_info})
         
         to_write = str(to_write).replace("'",'"')
-        with open('information.json','w') as file:
+
+        if self.file_storage_name == None:
+            self.file_storage_name = file
+        with open(self.file_storage_name,'w') as file:
             file.write(to_write)
             file.close()
         
         return self.information
+    
+    def _storage_file_(self): return self.file_storage_name
 
     @CastNewItem(['NewStructItemInformation', 'Adding struct item value/information'])
     def AddInfo(self, Item_Name,Item_Info):
@@ -309,24 +351,24 @@ class CreateStruct:
                         secondary_index += 1
                     else: self.information[Item_Name].append(Item_Info[i])
                 else:
-                    if not self.information[Item_Name] == {} or not self.information[Item_Name] == "NULL":
+                    if not self.information[Item_Name] == {} and not self.information[Item_Name] == "NULL":
                         info = [self.information[Item_Name],Item_Info[i]] 
                         self.information[Item_Name] = info
                     else: self.information[Item_Name] = Item_Info[i]
         else:
-            self.struct_name_values.append(Item_Info)
+            if not Item_Info in self.struct_name_values:
+                self.struct_name_values.append(Item_Info)
 
             if Item_Name in self.information:
                 if isinstance(self.information[Item_Name],list):
-                    info = [self.information[Item_Name],Item_Info]
-                    self.information[Item_Name].append(info)
+                    self.information[Item_Name].append(Item_Info)
                 else:
                     if not self.information[Item_Name] == {} and not self.information[Item_Name] == "NULL":
                         info = [self.information[Item_Name],Item_Info]
                         self.information[Item_Name] = info
                     else:
                         self.information[Item_Name] = self.struct_name_values[self.current_info_index]
-                self.current_info_index += 1
+                    self.current_info_index += 1
             else:
                 raise Exception('\nCannot give value to something that does not exist in the struct\n')
     
@@ -370,9 +412,13 @@ class CreateStruct:
                     item_to_tab = all[i]
                     tabs = len(all[i-1])-len(all[i])+1
                     tabs_ = ' '*tabs
+        
+
 
         item = ''
         item_info = ''
+        ind = 0
+        is_dict = False
         for i in all:
             if i in self.updated_names and extra == True:item = i + '(UPDATED)'
             else: item = i
@@ -380,8 +426,34 @@ class CreateStruct:
             if i in self.update_values and extra == True:item_info = self.update_values[i] + '(UPDATED)'
             else: item_info = self.information[i]
 
+            if isinstance(self.information[i],list):
+                for x in range(len(self.information[i])):
+
+                    if isinstance(self.information[i][x],dict):
+
+                        ind += 1
+
+                        if ind == len(self.information[i])-1:
+                            is_dict = True
+                            break
+            
+            info = []
+            it_ = 0
+            if is_dict == True:
+                for i in self.information:
+                    if it_ == 0:
+                        info.append(self.information[i][0])
+                        it_ += 1
+                            
+                    for x in range(len(self.information[i])):
+                        if not self.information[i][x] in info:
+                            info[0].update(self.information[i][x])
+
             if i == item_to_tab:
-                print(item+f':\t{tabs_}',item_info)
-            else: print(item+':\t',item_info)
+                if info: print(item+f':\t{tabs_}',info)
+                else: print(item+f':\t{tabs_}',item_info)
+            else:
+                if info:print(item+':\t',info[0])
+                else: print(item+':\t',item_info)
 
             curr += 1
