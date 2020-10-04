@@ -1,11 +1,13 @@
 import sys, os, json
 
-print(os.getcwd())
-sys.path.append('../')
 try:
     from ..main import CreateStruct
 except ImportError:
-    raise ImportError('For some unkown reason, CreateStruct cannot be imported from main.')
+    try:
+        sys.path.append('../')
+        from main import CreateStruct
+    except:
+        raise ImportError('For some unkown reason, CreateStruct cannot be imported from main.')
 
 class StructConnect:
 
