@@ -1,8 +1,8 @@
 import sys, os, json
 
-sys.path.append('../')
-try:
-    from main import CreateStruct
+#sys.path.append('../')
+#try:
+    from ..main import CreateStruct
 except ImportError:
     raise ImportError('For some unkown reason, CreateStruct cannot be imported from main.')
 
