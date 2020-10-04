@@ -1,5 +1,6 @@
 import sys, os, json
 
+print(os.getcwd())
 sys.path.append('../')
 try:
     from main import CreateStruct
