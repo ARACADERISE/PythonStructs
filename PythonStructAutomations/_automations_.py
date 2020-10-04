@@ -3,7 +3,7 @@ import sys, os, json
 print(os.getcwd())
 sys.path.append('../')
 try:
-    from main import CreateStruct
+    from ..main import CreateStruct
 except ImportError:
     raise ImportError('For some unkown reason, CreateStruct cannot be imported from main.')
 
