@@ -1,6 +1,5 @@
 # structs, in Python!
 import os, json
-import StructAutomations._automations_
 
 """
     That one powerful Python tool to work with data..that only used/imported two ies for only one use: checking if a single file existed/loading stringified dictionaries
