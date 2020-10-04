@@ -174,8 +174,31 @@ class CreateStruct:
                 items.append('All struct items are null')
             return items
     
+    @CastNewItem(['StructDeleteItem','Deleting an item from the struct'])
+    def delete_item(self, item_name) -> (dict or None):
+
+        if item_name in self.struct_names:
+            index = 0
+            for i in range(len(self.struct_names)):
+                if self.struct_names[i] == item_name:
+                    index = i
+                    break
+
+            del(self.struct_names[index])
+
+            # Wrapping it in try:except to avoid any errors
+            try:
+                del(self.struct_name_values[index])
+            except: pass
+            if item_name in self.information:
+                del(self.information[item_name])
+
+                return self.information
+            else:
+                raise Exception('Item does not exist')
+
     @CastNewItem(['StructUpdateStructName','Updating struct name'])
-    def update_name(self, item_name, item_new_name) -> (dict,None):
+    def update_name(self, item_name, item_new_name) -> (dict or None):
 
         index = 0
         found = False
@@ -204,45 +227,25 @@ class CreateStruct:
             return self.updated_names
     
     @CastNewItem(['StructUpdateStructItemInfo','Updating struct item information/value'])
-    def update_value(self, item_name, new_value, index_to_chage = None) -> (dict, None):
+    def update_value(self, item_name, new_value) -> (dict or None):
 
-        index = 0
-        found = False
-        for i in range(len(self.struct_names)):
-            if item_name == self.struct_names[i]:
-                index = 0
-                found = True
-                break
-        
-        if found == True:
-            if not index_to_chage == None:
-                if isinstance(self.struct_name_values[index],list):
-                    try:
-                        if self.struct_name_values[index][index_to_chage]:
-                            self.struct_name_values[index][index_to_chage] = new_value
-                            self.information[item_name] = self.struct_name_values[index]
-                    except IndexError: raise IndexError('Index out of range')
-                else:
-                    self.struct_name_values[index] = new_value
-                    if isinstance(self.information[item_name],list):
-                        self.information[item_name][index_to_chage] = new_value
-                    else:
-                        info = [self.information[item_name],new_value]
-                        self.information[item_name] = info
+        if item_name in self.struct_names:
+            index = 0
+            for i in range(len(self.struct_names)):
 
+                if self.struct_names[i] == item_name:
+                    index = i
+                    break
+            
+            self.struct_name_values[index] = new_value
+
+            if item_name in self.information:
+                self.information[item_name] = self.struct_name_values[index]
+
+                return self.information
             else:
-                if self.struct_name_values[index]:
-                    self.struct_name_values[index] = new_value
-                    self.update_values.update({item_name:new_value})
-                    
-                    return self.update_values
-                else: 
-                    self.struct_name_values.append(new_value)
-                    self.current_info_index += 1
-                self.information[item_name] = new_value
+                raise Exception('Item does not exist')
 
-
-            return None
 
     @CastNewItem(['NewStructItem','Adding new Struct item'])
     def add_items(self, struct_item_name, add_many = 0):
@@ -369,7 +372,7 @@ class CreateStruct:
                         self.information[Item_Name] = self.struct_name_values[self.current_info_index]
                     self.current_info_index += 1
             else:
-                raise Exception('\nCannot give value to something that does not exist in the struct\n')
+                raise Exception(f'\nCannot give value to something that does not exist in the struct\n\n')
     
     @CastNewItem(['PrintingStructItem','Printing the struct item'])
     def print_struct_item(self, item_name, extra = True):
