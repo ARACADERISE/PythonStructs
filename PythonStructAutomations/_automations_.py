@@ -1,8 +1,8 @@
 import sys, os, json
 
-#sys.path.append('../')
+sys.path.append('../')
 try:
-    from ..main import CreateStruct
+    from main import CreateStruct
 except ImportError:
     raise ImportError('For some unkown reason, CreateStruct cannot be imported from main.')
 
@@ -42,6 +42,42 @@ class EntitleDb(object):
 
         self.current_updated_name = item_name
         self.current_update_value = item_info
+    
+    def _grab_(self, item_name) -> list:
+
+        names = self.db._grab_names_()
+        values = self.db._init_items_(dict_=True)[0]
+        return_list = []
+        
+        if item_name in names:
+
+            index = 0
+            for i in range(len(names)):
+
+                if names[i] == item_name:
+                    index = i
+                    break
+            
+            return_list.append({names[index]:values[item_name]})
+
+            return return_list
+    
+    def _delete_(self, item_name):
+
+        op = json.loads(open(self.conn_name,'r').read())
+
+        if item_name in op:
+
+            self.db.delete_item(item_name)
+            
+            del(op[item_name])
+            with open(self.conn_name, 'w') as file:
+                file.write(json.dumps(
+                    op,
+                    indent=2,
+                    sort_keys=False
+                ))
+                file.close()
     
     def _commit_change_(self):
 
