@@ -154,7 +154,11 @@ class CreateStruct:
                 self.current_info_index += 1
     
     def _grab_item_(self,item_type, from_):
-
+        
+        if from_ in self.struct_names:
+            from_ = self.information[from_]
+        else:
+            raise Exception(f'{from_}' does not exist')
         for i in from_:
             if isinstance(i,item_type):
                 return i
