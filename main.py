@@ -158,7 +158,7 @@ class CreateStruct:
         if from_ in self.struct_names:
             from_ = self.information[from_]
         else:
-            raise Exception(f'{from_}' does not exist')
+            raise Exception(f'{from_} does not exist')
         for i in from_:
             if isinstance(i,item_type):
                 return i
